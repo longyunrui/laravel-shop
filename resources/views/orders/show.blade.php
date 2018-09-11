@@ -109,6 +109,12 @@
         <div class="payment-buttons">
           <a class="btn btn-primary btn-sm" href="{{ route('payment.alipay', ['order' => $order->id]) }}">支付宝支付</a>
           <button class="btn btn-sm btn-success" id='btn-wechat'>微信支付</button>
+          <!-- 分期支付按钮开始 -->
+          <!-- 仅当订单总金额大等于分期最低金额时才展示分期按钮 -->
+          @if ($order->total_amount >= config('app.min_installment_amount'))
+            <button class="btn btn-sm btn-info" id='btn-installment'>分期付款</button>
+          @endif
+          <!-- 分期支付按钮结束 -->
         </div>
         @endif
         <!-- 支付按钮结束 -->
@@ -119,7 +125,9 @@
         </div>
         @endif
         <!-- 订单已支付，且退款状态是未退款时展示申请退款按钮 -->
-        @if($order->paid_at && $order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
+        @if($order->type !== \App\Models\Order::TYPE_CROWDFUNDING &&
+            $order->paid_at &&
+            $order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
         <div class="refund-button">
           <button class="btn btn-sm btn-danger" id="btn-apply-refund">申请退款</button>
         </div>
@@ -130,6 +138,44 @@
 </div>
 </div>
 </div>
+
+<!-- 分期弹框开始 -->
+<div class="modal fade" id="installment-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">选择分期期数</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-striped text-center">
+          <thead>
+          <tr>
+            <th class="text-center">期数</th>
+            <th class="text-center">费率</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          @foreach(config('app.installment_fee_rate') as $count => $rate)
+            <tr>
+              <td>{{ $count }}期</td>
+              <td>{{ $rate }}%</td>
+              <td>
+                <button class="btn btn-sm btn-primary btn-select-installment" data-count="{{ $count }}">选择</button>
+              </td>
+            </tr>
+          @endforeach
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 分期弹框结束 -->
 @endsection
 
 @section('scriptsAfterJs')
@@ -195,6 +241,20 @@
             });
           });
       });
+    });
+
+    // 分期付款按钮点击事件
+    $('#btn-installment').click(function () {
+      // 展示分期弹框
+      $('#installment-modal').modal();
+    });
+
+    // 选择分期期数按钮点击事件
+    $('.btn-select-installment').click(function () {
+      axios.post('{{ route('payment.installment', ['order' => $order->id]) }}', { count: $(this).data('count') })
+        .then(function (response) {
+          location.href = '/installments/' + response.data.id;
+        })
     });
 
   });

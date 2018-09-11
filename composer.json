@@ -6,11 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "encore/laravel-admin": "1.5.*",
+        "elasticsearch/elasticsearch": "~6.0",
+        "encore/laravel-admin": "1.6.0",
         "endroid/qr-code": "^3.2",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.*",
+        "laravel/horizon": "^1.4",
         "laravel/tinker": "~1.0",
+        "moontoast/math": "^1.1",
         "overtrue/laravel-lang": "^3.0",
         "predis/predis": "^1.1",
         "yansongda/pay": "^2.4"

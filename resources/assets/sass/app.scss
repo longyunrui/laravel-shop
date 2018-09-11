@@ -56,10 +56,7 @@ body {
     }
 }
 
-.products-index-page, .products-favorites-page {
-  .pagination {
-    margin-right: 5px;
-  }
+@mixin product-list {
   .products-list {
     padding: 0 15px;
     .product-item {
@@ -117,11 +114,73 @@ body {
       }
     }
   }
+}
+
+.products-index-page, .products-favorites-page {
+  .pagination {
+    margin-right: 5px;
+  }
+  @include product-list;
+  // 替换原有的 .search-form
   .search-form {
     padding: 0 20px 10px;
-    margin-bottom: 10px;
     border-bottom: 1px solid #eee;
+    .all-products {
+      font-size: 12px;
+      color: #666;
+      text-decoration: none;
+    }
+    .category {
+      font-size: 12px;
+      height: 22px;
+      border: 1px solid #eee;
+      padding: 4px;
+      color: #666;
+      a {
+        text-decoration: none;
+        color: #666;
+      }
+    }
+    .filter {
+      border: 1px red solid;
+      font-size: 12px;
+      padding: 2px 0 2px 2px;
+      .filter-value {
+        color: red;
+      }
+      .remove-filter {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        background: red;
+        padding: 2px;
+      }
+    }
   }
+  .filters {
+    font-size: 12px;
+    margin-bottom: 10px;
+    &>.row {
+      border-bottom: 1px solid #eee;
+      .filter-key {
+        width: 150px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #f3f3f3;
+        color: #666;
+      }
+      .filter-values {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        a {
+          margin-right: 50px;
+          color: #666;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
 }
 
 .products-show-page {
@@ -237,6 +296,68 @@ body {
     .tab-content {
       border: 1px solid #eee;
       padding: 20px;
+    }
+  }
+
+  .crowdfunding-info {
+    margin-bottom: 20px;
+    font-size: 14px;
+    .have-text {
+      font-size: 16px;
+    }
+    .total-amount {
+      .symbol {
+        font-size: 20px;
+      }
+      font-size: 32px;
+    }
+    .progress {
+      height: 10px;
+      margin-bottom: 5px;
+    }
+    .progress-info {
+      font-weight: 600;
+      margin: 10px 0;
+    }
+    .current-progress {
+      color: rgb(161, 6, 224);
+    }
+    .text-red {
+      color: red;
+    }
+  }
+
+  .properties-list {
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 20px;
+    .properties-list-title {
+      padding: 5px 0;
+      color: #999;
+      font-weight: 700;
+    }
+    .properties-list-body {
+      font-size: 12px;
+      padding: 5px 0;
+      list-style: none;
+      text-indent: 0;
+      li {
+        display: inline-block;
+        width: 30%;
+        overflow: hidden;
+      }
+    }
+  }
+  .product-description img {
+    max-width: 100%;
+  }
+
+  .similar-products {
+    @include product-list;
+    .title {
+      font-weight: normal;
+    }
+    .price {
+      background-color: unset;
     }
   }
 }
@@ -481,5 +602,102 @@ body {
 
   textarea {
     border-radius: 0px;
+  }
+}
+
+.dropdown-submenu {
+  position: relative;
+  & > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0 6px 6px 6px;
+  }
+  &:hover > .dropdown-menu {
+    display: block;
+  }
+  & > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+  }
+  &:hover > a:after {
+    border-left-color: #fff;
+  }
+  &.pull-left {
+    float: none;
+    & > .dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      border-radius: 6px 0 6px 6px;
+    }
+  }
+}
+
+.installments-show-page {
+  font-size: 12px;
+  .table {
+    margin-bottom: 0;
+    .repaid {
+      color: green;
+    }
+    .overdue {
+      color: red;
+    }
+  }
+  .item-amount {
+    padding-right: 20px;
+    width: 200px;
+  }
+  .installment-top {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+  }
+  .installment-info {
+    width: 50%;
+    .line {
+      display: flex;
+      flex-direction: row;
+      .line-label {
+        width: 80px;
+        text-align: right;
+      }
+      .line-value {
+        padding-left: 20px;
+        flex-shrink: 100;
+      }
+    }
+    border-right: 1px solid #ddd;
+  }
+  .installment-next {
+    width: 50%;
+    font-family: Verdana,Tahoma,Helvetica,Arial;
+    .installment-clear {
+      font-weight: bolder;
+      font-size: 16px;
+    }
+    .total-amount {
+      font-weight: bolder;
+      font-size: 14px;
+    }
+    .value {
+      display: inline-block;
+      width: 150px;
+      padding-right: 20px;
+    }
+  }
+  .payment-buttons {
+    margin-top: 10px;
+    padding-right: 10px;
   }
 }
